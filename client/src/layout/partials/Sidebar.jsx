@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Children,
   SidebarContainer,
   SidebarWrapper,
   SidebarLogoWrapper,
@@ -11,19 +10,8 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import SidebarItems from './SidebarItems';
 
-const MOBILE_VIEW = window.innerWidth < 468;
+const Sidebar = ({ displaySidebar, handleSidebarDisplay }) => {
 
-const Sidebar = ({ children }) => {
-  const [displaySidebar, setDisplaySidebar] = useState(!MOBILE_VIEW);
-
-  const handleSidebarDisplay = (e) => {
-    e.preventDefault();
-    if (window.innerWidth > 468) {
-      setDisplaySidebar(!displaySidebar);
-    } else {
-      setDisplaySidebar(false);
-    }
-  };
   return (
     <>
       <div style={{ position: 'fixed', left: '0', top: '0', bottom: '0', zIndex: '99999', width: '20%', overflowY: 'hidden' }}>
@@ -54,9 +42,7 @@ const Sidebar = ({ children }) => {
           </SidebarWrapper>
         </SidebarContainer>
       </div>
-      <div style={{overflowY: 'scroll', position: 'relative' }}>
-        <Children displaySidebar={displaySidebar}>{children}</Children>
-      </div>
+     
     </>
   )
 };
