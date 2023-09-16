@@ -26,7 +26,7 @@ const Sidebar = ({ children }) => {
   };
   return (
     <>
-      <div style={{ width: '20%' }}>
+      <div style={{ position: 'fixed', left: '0', top: '0', bottom: '0', zIndex: '99999', width: '20%', overflowY: 'hidden' }}>
         <SidebarContainer displaySidebar={displaySidebar}>
           <SidebarWrapper>
             <SidebarLogoWrapper displaySidebar={displaySidebar}>
@@ -54,7 +54,7 @@ const Sidebar = ({ children }) => {
           </SidebarWrapper>
         </SidebarContainer>
       </div>
-      <div style={{ width: '80%' }}>
+      <div style={{overflowY: 'scroll', position: 'relative' }}>
         <Children displaySidebar={displaySidebar}>{children}</Children>
       </div>
     </>
