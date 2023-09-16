@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   SidebarContainer,
   SidebarWrapper,
@@ -42,7 +42,6 @@ const Sidebar = ({ displaySidebar, handleSidebarDisplay }) => {
           </SidebarWrapper>
         </SidebarContainer>
       </div>
-     
     </>
   )
 };
