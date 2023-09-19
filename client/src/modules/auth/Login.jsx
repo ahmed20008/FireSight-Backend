@@ -72,11 +72,13 @@ const Login = () => {
                   </div>
                 </div>
                 <div className="col-md-12 mb-3">
-                  <button className="btn btn-primary w-100" type="submit">Sign in</button>
+                  <button className="btn text-white w-100" style={{ backgroundColor: '#f4813f' }} type="submit">
+                    Sign In
+                  </button>
                 </div>
               </form>
               <div className='text-center'>
-                <p>Don't have an account? <Link to="/register" className='fw-bold'>Sign up</Link></p>
+                <p>Don't have an account? <Link to="/register" className='fw-bold'>Sign Up</Link></p>
               </div>
             </div>
           </div>

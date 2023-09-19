@@ -36,8 +36,8 @@ const Register = () => {
               <form onSubmit={createAccount}>
                 <UserInfo onChange={setUser} />
                 <div className="col-md-12 mb-3">
-                  <button className="btn btn-primary w-100" type='submit'>
-                    Sign up
+                  <button className="btn text-white w-100" style={{ backgroundColor: '#f4813f' }} type='submit'>
+                    Sign Up
                   </button>
                 </div>
                 <div className='text-center'>
