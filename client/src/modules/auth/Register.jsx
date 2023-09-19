@@ -2,8 +2,26 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import AuthLayout from '../../layout/AuthLayout';
 import '../../assets/css/Register.css';
+import UserInfo from './component/UserInfo';
 
 const Register = () => {
+
+  const [user, setUser] = useState({});
+
+  const buildSignupData = () => {
+    return {
+      name: user?.name,
+      phone: user?.phone,
+      email: user?.email,
+      password: user?.password,
+      password_confirmation: user?.password_confirmation,
+    }
+  };
+
+  const createAccount = async (e) => {
+    e.preventDefault();
+    const data = buildSignupData();
+  }
 
   return (
     <div className="row">
@@ -15,50 +33,8 @@ const Register = () => {
               <p className='text-center mb-4'>Hey, Enter your details to get signed up to your account.</p>
             </div >
             <div className="register-inputs">
-              <form onSubmit={() => { }}>
-                <div className="row">
-                  <div className="col-md-6 mb-3">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Full Name"
-                      required
-                    />
-                  </div>
-                  <div className="col-md-6 mb-3">
-                    <input
-                      type="email"
-                      className="form-control"
-                      placeholder="Email"
-                      required
-                    />
-                  </div>
-
-                  <div className="col-md-12 mb-3">
-                    <input
-                      type="tel"
-                      className="form-control"
-                      placeholder="Phone Number"
-                      required
-                    />
-                  </div>
-                  <div className="col-md-12 mb-3">
-                    <input
-                      type="password"
-                      className="form-control"
-                      placeholder="Password"
-                      required
-                    />
-                  </div>
-                  <div className="col-md-12 mb-3">
-                    <input
-                      type="password"
-                      className="form-control"
-                      required
-                      placeholder="Confirm Password"
-                    />
-                  </div>
-                </div>
+              <form onSubmit={createAccount}>
+                <UserInfo onChange={setUser} />
                 <div className="col-md-12 mb-3">
                   <button className="btn btn-primary w-100" type='submit'>
                     Sign up
