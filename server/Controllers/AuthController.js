@@ -17,15 +17,15 @@ module.exports.Signup = async (req, res, next) => {
 
     const user = await User.create({ email, password, username, createdAt, permissions });
 
-    const token = createSecretToken(user._id);
-    res.cookie("token", token, {
-      withCredentials: true,
-      httpOnly: false,
-    });
+    // const token = createSecretToken(user._id);
+    // res.cookie("token", token, {
+    //   withCredentials: true,
+    //   httpOnly: false,
+    // });
 
     res
       .status(201)
-      .json({ message: "User signed in successfully", success: true, user });
+      .json({ message: "User signed in successfully", success: true });
     next();
   } catch (error) {
     console.error(error);
@@ -51,10 +51,14 @@ module.exports.Login = async (req, res, next) => {
       withCredentials: true,
       httpOnly: false,
     });
-    res.status(201).json({
+    res.status(200).json({
       message: "User logged in successfully", success: true, data: {
-        username: user.username,
-        permissions: user.permissions
+        "auth_token": token,
+        "exp": 14 * 24 * 60 * 60,
+        user: {
+          username: user.username,
+          permissions: user.permissions
+        }
       }
     });
     next()
