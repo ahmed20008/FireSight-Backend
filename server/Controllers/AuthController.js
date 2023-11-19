@@ -5,17 +5,17 @@ const nodemailer = require("nodemailer");
 
 module.exports.Signup = async (req, res, next) => {
   try {
-    const { email, password, username, createdAt } = req.body;
+    const { email, password, name, createdAt } = req.body;
 
     const isAdmin = email === "admin@example.com";
     const permissions = isAdmin ? ["admin"] : ["user"];
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.json({ message: "User already exists" });
+      return res.status(400).json({ message: "User already exists" });
     }
 
-    const user = await User.create({ email, password, username, createdAt, permissions });
+    const user = await User.create({ email, password, name, createdAt, permissions });
 
     // const token = createSecretToken(user._id);
     // res.cookie("token", token, {
@@ -29,6 +29,7 @@ module.exports.Signup = async (req, res, next) => {
     next();
   } catch (error) {
     console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -36,15 +37,15 @@ module.exports.Login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res.json({ message: 'All fields are required' })
+      return res.status(400).json({ message: 'All fields are required' })
     }
     const user = await User.findOne({ email });
     if (!user) {
-      return res.json({ message: 'Incorrect password or email' })
+      return res.status(400).json({ message: 'Incorrect password or email' })
     }
     const auth = await bcrypt.compare(password, user.password)
     if (!auth) {
-      return res.json({ message: 'Incorrect password or email' })
+      return res.status(400).json({ message: 'Incorrect password or email' })
     }
     const token = createSecretToken(user._id);
     res.cookie("token", token, {
@@ -56,7 +57,7 @@ module.exports.Login = async (req, res, next) => {
         "auth_token": token,
         "exp": 14 * 24 * 60 * 60,
         user: {
-          username: user.username,
+          name: user.name,
           permissions: user.permissions
         }
       }
@@ -64,6 +65,7 @@ module.exports.Login = async (req, res, next) => {
     next()
   } catch (error) {
     console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -123,5 +125,32 @@ module.exports.UpdatePassword = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+module.exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find().select('email name permissions');
+    res.status(200).json({ users });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports.deleteUser = async (req, res) => {
+  try {
+    const { _id } = req.params;
+    const user = await User.findById(_id);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    await user.deleteOne();
+
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
