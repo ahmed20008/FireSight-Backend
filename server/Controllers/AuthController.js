@@ -1,5 +1,5 @@
 const User = require("../Models/UserModel");
-const { createSecretToken, createResetToken, verifyResetToken } = require("../util/SecretToken");
+const { createSecretToken, createResetToken, verifyResetToken, verifyToken } = require("../util/SecretToken");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 
@@ -149,6 +149,22 @@ module.exports.deleteUser = async (req, res) => {
     await user.deleteOne();
 
     res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports.currentUser = async (req, res) => {
+  try {
+    const user_token = req.cookies.token;
+    const check_user = verifyToken(user_token);
+    if (!check_user) {
+      return res.status(404).json({ error: "No token found!" });
+    }
+
+    const user = await User.findById(check_user.id).select('email name permissions');;
+    res.status(200).json({ user });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });

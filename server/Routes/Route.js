@@ -1,4 +1,4 @@
-const { Login, Signup, ForgotPassword, UpdatePassword, getAllUsers, deleteUser } = require("../Controllers/AuthController");
+const { Login, Signup, ForgotPassword, UpdatePassword, getAllUsers, deleteUser, currentUser } = require("../Controllers/AuthController");
 const { addPermissionToUser, removePermissionFromUser } = require("../Controllers/PermissionController");
 const { AddCamera, getAllCameras, deleteCamera } = require("../Controllers/CameraController");
 const router = require("express").Router();
@@ -9,6 +9,7 @@ router.post('/forget-password', ForgotPassword);
 router.post('/update-password/:_id/:token', UpdatePassword);
 router.get('/all-users', getAllUsers);
 router.delete("/delete-user/:_id", deleteUser);
+router.get('/me', currentUser);
 
 router.post("/add-permission", addPermissionToUser);
 router.post("/remove-permission", removePermissionFromUser);
