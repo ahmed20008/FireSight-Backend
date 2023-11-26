@@ -6,7 +6,7 @@ module.exports.AddCamera = async (req, res) => {
 
     const existingCamera = await Camera.findOne({ link });
     if (existingCamera) {
-      return res.status(200).json({ message: "Camera link already exists" });
+      return res.status(201).json({ message: "Camera link already exists" });
     }
 
     await Camera.create({ name, location, link, view, description, createdAt });

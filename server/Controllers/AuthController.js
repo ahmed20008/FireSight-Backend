@@ -7,7 +7,7 @@ module.exports.Signup = async (req, res, next) => {
   try {
     const { email, password, name, createdAt } = req.body;
 
-    const isAdmin = email === "admin@example.com";
+    const isAdmin = email === "fyp@admin.com";
     const permissions = isAdmin ? ["admin"] : ["user"];
 
     const existingUser = await User.findOne({ email });
@@ -163,8 +163,22 @@ module.exports.currentUser = async (req, res) => {
       return res.status(404).json({ error: "No token found!" });
     }
 
-    const user = await User.findById(check_user.id).select('email name permissions');;
+    const user = await User.findById(check_user.id).select('email name permissions');
     res.status(200).json({ user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports.Logout = async (req, res) => {
+  try {
+    const user_token = res.clearCookie('token');
+    if (!user_token) {
+      return res.status(404).json({ error: "No token found!" });
+    }
+
+    res.json({ message: 'Logout successful' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
