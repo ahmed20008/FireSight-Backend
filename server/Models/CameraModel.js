@@ -22,6 +22,14 @@ const cameraSchema = new mongoose.Schema({
     type: String,
     default: "null",
   },
+  user: {
+    id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    email: String,
+    name: String,
+  },
   createdAt: {
     type: Date,
     default: new Date(),

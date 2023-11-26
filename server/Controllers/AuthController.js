@@ -178,7 +178,7 @@ module.exports.Logout = async (req, res) => {
       return res.status(404).json({ error: "No token found!" });
     }
 
-    res.json({ message: 'Logout successful' });
+    res.status(200).json({ message: 'Logout successful' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
