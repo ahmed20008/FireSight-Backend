@@ -3,19 +3,19 @@ const { createSecretToken, createResetToken, verifyResetToken, verifyToken } = r
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 
-module.exports.Signup = async (req, res, next) => {
+module.exports.AddUser = async (req, res, next) => {
   try {
-    const { email, password, name, createdAt } = req.body;
+    const { email, name, phone, address, createdAt } = req.body;
 
-    const isAdmin = email === "fyp@admin.com";
-    const permissions = isAdmin ? ["admin"] : ["user"];
+    // const isAdmin = email === "fyp@admin.com";
+    // const permissions = isAdmin ? ["admin"] : ["user"];
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const user = await User.create({ email, password, name, createdAt, permissions });
+    const user = await User.create({ email, name, phone, permissions, address, createdAt });
 
     // const token = createSecretToken(user._id);
     // res.cookie("token", token, {
@@ -58,7 +58,9 @@ module.exports.Login = async (req, res, next) => {
         "exp": 14 * 24 * 60 * 60,
         user: {
           name: user.name,
-          permissions: user.permissions
+          permissions: user.permissions,
+          phone: user.phone,
+          address: user.address
         }
       }
     });

@@ -13,11 +13,29 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, "Your password is required"],
+    default: "password",
   },
   permissions: {
     type: [String],
-    default: ["user"],
+    required: [true, "Permission is required"],
+  },
+  phone: {
+    type: Number,
+    required: [true, "Phone Number is required"],
+  },
+  address: {
+    street: {
+      type: String,
+    },
+    block: {
+      type: String,
+    },
+    city: {
+      type: String,
+    },
+    state: {
+      type: String,
+    },
   },
   createdAt: {
     type: Date,
