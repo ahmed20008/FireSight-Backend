@@ -5,17 +5,17 @@ const nodemailer = require("nodemailer");
 
 module.exports.AddUser = async (req, res, next) => {
   try {
-    const { email, name, phone, address, createdAt } = req.body;
+    const { email, name, phone, address, Fire_dept_address, createdAt } = req.body;
 
     // const isAdmin = email === "fyp@admin.com";
-    // const permissions = isAdmin ? ["admin"] : ["user"];
+    // const permissions = isAdmin && ["admin"];
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const user = await User.create({ email, name, phone, permissions, address, createdAt });
+    const user = await User.create({ email, name, phone, permissions, address, Fire_dept_address, createdAt });
 
     // const token = createSecretToken(user._id);
     // res.cookie("token", token, {
@@ -159,8 +159,9 @@ module.exports.deleteUser = async (req, res) => {
 
 module.exports.currentUser = async (req, res) => {
   try {
-    const user_token = req.cookies.token;
-    const check_user = verifyToken(user_token);
+    // const user_token = req.cookies.token;
+    const { token } = req.body;
+    const check_user = verifyToken(token);
     if (!check_user) {
       return res.status(404).json({ error: "No token found!" });
     }

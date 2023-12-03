@@ -5,8 +5,9 @@ const { verifyToken } = require("../util/SecretToken");
 module.exports.AddCamera = async (req, res) => {
   try {
     const { name, location, link, view, description, createdAt } = req.body;
-    const user_token = req.cookies.token;
-    const check_user = verifyToken(user_token);
+    // const user_token = req.cookies.token;
+    const { token } = req.body;
+    const check_user = verifyToken(token);
     if (!check_user) {
       return res.status(404).json({ error: "No token found!" });
     }

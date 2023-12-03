@@ -24,10 +24,18 @@ const userSchema = new mongoose.Schema({
     required: [true, "Phone Number is required"],
   },
   address: {
-    street: {
+    address: {
       type: String,
     },
-    block: {
+    city: {
+      type: String,
+    },
+    state: {
+      type: String,
+    },
+  },
+  Fire_dept_address: {
+    address: {
       type: String,
     },
     city: {
