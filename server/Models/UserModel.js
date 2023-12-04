@@ -45,6 +45,10 @@ const userSchema = new mongoose.Schema({
       type: String,
     },
   },
+  verified: {
+    type: String,
+    default: "false",
+  },
   createdAt: {
     type: Date,
     default: new Date(),

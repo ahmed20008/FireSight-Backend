@@ -5,27 +5,42 @@ const nodemailer = require("nodemailer");
 
 module.exports.AddUser = async (req, res, next) => {
   try {
-    const { email, name, phone, address, Fire_dept_address, createdAt } = req.body;
-
-    // const isAdmin = email === "fyp@admin.com";
-    // const permissions = isAdmin && ["admin"];
+    const { email, name, phone, permissions, address, Fire_dept_address, verified, createdAt } = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const user = await User.create({ email, name, phone, permissions, address, Fire_dept_address, createdAt });
-
-    // const token = createSecretToken(user._id);
-    // res.cookie("token", token, {
-    //   withCredentials: true,
-    //   httpOnly: false,
-    // });
+    const user = await User.create({ email, name, phone, permissions, address, Fire_dept_address, verified, createdAt });
 
     res
       .status(201)
-      .json({ message: "User signed in successfully", success: true });
+      .json({ message: "User Created successfully", success: true });
+    next();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports.SignUp = async (req, res, next) => {
+  try {
+    const { email, name, phone, address, createdAt } = req.body;
+
+    const isAdmin = email === "fyp@admin.com";
+    const permissions = isAdmin && ["admin"];
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    const user = await User.create({ email, name, phone, permissions, address, Fire_dept_address, verified, createdAt });
+
+    res
+      .status(201)
+      .json({ message: "User data sended to admin successfully", success: true });
     next();
   } catch (error) {
     console.error(error);
@@ -60,7 +75,8 @@ module.exports.Login = async (req, res, next) => {
           name: user.name,
           permissions: user.permissions,
           phone: user.phone,
-          address: user.address
+          address: user.address,
+          Fire_dept_address: user.Fire_dept_address
         }
       }
     });
@@ -132,7 +148,9 @@ module.exports.UpdatePassword = async (req, res) => {
 
 module.exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find().select('email name permissions');
+    const verifiedQuery = req.query.verified;
+    const query = verifiedQuery !== undefined ? { verified: verifiedQuery === 'true' } : {};
+    const users = await User.find(query).select('email name permissions phone address Fire_dept_address verified');
     res.status(200).json({ users });
   } catch (error) {
     console.error(error);
@@ -160,13 +178,13 @@ module.exports.deleteUser = async (req, res) => {
 module.exports.currentUser = async (req, res) => {
   try {
     // const user_token = req.cookies.token;
-    const { token } = req.body;
-    const check_user = verifyToken(token);
+    const tokenQuery = req.query.token;
+    const check_user = verifyToken(tokenQuery);
     if (!check_user) {
       return res.status(404).json({ error: "No token found!" });
     }
 
-    const user = await User.findById(check_user.id).select('email name permissions');
+    const user = await User.findById(check_user.id).select('email name permissions phone address Fire_dept_address verified');
     res.status(200).json({ user });
   } catch (error) {
     console.error(error);
@@ -182,6 +200,32 @@ module.exports.Logout = async (req, res) => {
     }
 
     res.status(200).json({ message: 'Logout successful' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports.UpdateUser = async (req, res) => {
+
+  const { _id } = req.params;
+  const { email, name, phone, address, Fire_dept_address, verified } = req.body;
+
+  const user = await User.findById(_id);
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+  try {
+    const updateFields = { email, name, phone, address, Fire_dept_address, verified };
+
+    const updatedUser = await User.findOneAndUpdate({ _id }, updateFields, { new: true, runValidators: true });
+
+    if (!updatedUser) {
+      return res.status(500).json({ message: "Failed to update user" });
+    }
+
+    res.status(200).json({ message: "User updated successfully", user: updatedUser });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
