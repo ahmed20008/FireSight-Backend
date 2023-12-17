@@ -29,14 +29,14 @@ module.exports.SignUp = async (req, res, next) => {
     const { email, name, phone, address, createdAt } = req.body;
 
     const isAdmin = email === "fyp@admin.com";
-    const permissions = isAdmin && ["admin"];
+    const permissions = isAdmin ? "admin" : "user";
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const user = await User.create({ email, name, phone, permissions, address, Fire_dept_address, verified, createdAt });
+    const user = await User.create({ email, name, phone, permissions, address, createdAt });
 
     res
       .status(201)

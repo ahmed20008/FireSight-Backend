@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
     default: "password",
   },
   permissions: {
-    type: [String],
+    type: String,
     required: [true, "Permission is required"],
   },
   phone: {
@@ -33,6 +33,9 @@ const userSchema = new mongoose.Schema({
     state: {
       type: String,
     },
+    zipcode: {
+      type: Number,
+    },
   },
   Fire_dept_address: {
     address: {
@@ -43,6 +46,9 @@ const userSchema = new mongoose.Schema({
     },
     state: {
       type: String,
+    },
+    zipcode: {
+      type: Number,
     },
   },
   verified: {

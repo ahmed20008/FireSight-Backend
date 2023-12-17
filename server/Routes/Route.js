@@ -12,7 +12,7 @@ router.get('/all-users', getAllUsers);
 router.delete("/delete-user/:_id", deleteUser);
 router.get('/me', currentUser);
 router.post('/logout', Logout);
-router.post('/update-user/:_id', UpdateUser);
+router.put('/update-user/:_id', UpdateUser);
 
 router.post("/add-permission", addPermissionToUser);
 router.post("/remove-permission", removePermissionFromUser);
