@@ -1,4 +1,5 @@
 const User = require("../Models/UserModel");
+const Camera = require("../Models/CameraModel");
 const { createSecretToken, createResetToken, verifyResetToken, verifyToken } = require("../util/SecretToken");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
@@ -166,9 +167,10 @@ module.exports.deleteUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
+    await Camera.deleteMany({ 'user_id': user._id });
     await user.deleteOne();
 
-    res.status(200).json({ message: "User deleted successfully" });
+    res.status(200).json({ message: "User and associated cameras deleted successfully." });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });

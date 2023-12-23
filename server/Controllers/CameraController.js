@@ -11,7 +11,7 @@ module.exports.AddCamera = async (req, res) => {
     if (!check_user) {
       return res.status(404).json({ error: "No token found!" });
     }
-    const user = await User.findById(check_user.id).select('email name');
+    const userId = check_user.id;
 
     const existingCamera = await Camera.findOne({ link });
     if (existingCamera) {
@@ -20,11 +20,7 @@ module.exports.AddCamera = async (req, res) => {
 
     await Camera.create({
       name, location, link, view, description, createdAt,
-      user: {
-        id: user._id,
-        email: user.email,
-        name: user.name
-      }
+      user_id: userId,
     });
 
     res
@@ -53,7 +49,7 @@ module.exports.getCameras = async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     } else {
-      const cameras = await Camera.find({ 'user.id': _id });
+      const cameras = await Camera.find({ user_id: _id });
       res.status(200).json({ cameras });
     }
   } catch (error) {
