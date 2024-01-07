@@ -4,7 +4,7 @@ const { verifyToken } = require("../util/SecretToken");
 
 module.exports.AddCamera = async (req, res) => {
   try {
-    const { name, location, link, view, description, createdAt } = req.body;
+    const { name, location, link, view, description, fire_dept_id, createdAt } = req.body;
     // const user_token = req.cookies.token;
     const { token } = req.body;
     const check_user = verifyToken(token);
@@ -19,7 +19,7 @@ module.exports.AddCamera = async (req, res) => {
     }
 
     await Camera.create({
-      name, location, link, view, description, createdAt,
+      name, location, link, view, description, fire_dept_id, createdAt,
       user_id: userId,
     });
 

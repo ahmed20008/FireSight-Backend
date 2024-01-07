@@ -37,19 +37,9 @@ const userSchema = new mongoose.Schema({
       type: Number,
     },
   },
-  Fire_dept_address: {
-    address: {
-      type: String,
-    },
-    city: {
-      type: String,
-    },
-    state: {
-      type: String,
-    },
-    zipcode: {
-      type: Number,
-    },
+  Fire_dept_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
   },
   verified: {
     type: String,

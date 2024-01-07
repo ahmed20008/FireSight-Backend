@@ -26,6 +26,10 @@ const cameraSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
+  fire_dept_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
   createdAt: {
     type: Date,
     default: new Date(),

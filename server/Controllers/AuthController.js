@@ -6,14 +6,17 @@ const nodemailer = require("nodemailer");
 
 module.exports.AddUser = async (req, res, next) => {
   try {
-    const { email, name, phone, permissions, address, Fire_dept_address, verified, createdAt } = req.body;
+    const { email, name, phone, permissions, address, Fire_dept_id, verified, createdAt } = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const user = await User.create({ email, name, phone, permissions, address, Fire_dept_address, verified, createdAt });
+    const userFields = Fire_dept_id
+      ? { email, name, phone, permissions, address, Fire_dept_id, verified, createdAt }
+      : { email, name, phone, permissions, address, verified, createdAt };
+    const user = await User.create(userFields);
 
     res
       .status(201)

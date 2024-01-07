@@ -26,6 +26,20 @@ const eventSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Camera',
   },
+  fire_dept_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
+  event_check: {
+    event_type: {
+      type: String,
+      default: "new",
+    },
+    status: {
+      type: String,
+      default: "true",
+    },
+  },
   createdAt: {
     type: Date,
     default: new Date(),
