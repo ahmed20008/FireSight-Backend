@@ -6,15 +6,15 @@ const nodemailer = require("nodemailer");
 
 module.exports.AddUser = async (req, res, next) => {
   try {
-    const { email, name, phone, permissions, address, Fire_dept_id, verified, createdAt } = req.body;
+    const { email, name, phone, permissions, address, fire_dept_id, verified, createdAt } = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const userFields = Fire_dept_id
-      ? { email, name, phone, permissions, address, Fire_dept_id, verified, createdAt }
+    const userFields = fire_dept_id
+      ? { email, name, phone, permissions, address, fire_dept_id, verified, createdAt }
       : { email, name, phone, permissions, address, verified, createdAt };
     const user = await User.create(userFields);
 
@@ -80,7 +80,7 @@ module.exports.Login = async (req, res, next) => {
           permissions: user.permissions,
           phone: user.phone,
           address: user.address,
-          Fire_dept_address: user.Fire_dept_address
+          fire_dept_id: user.fire_dept_id
         }
       }
     });
@@ -189,8 +189,10 @@ module.exports.currentUser = async (req, res) => {
       return res.status(404).json({ error: "No token found!" });
     }
 
-    const user = await User.findById(check_user.id).select('email name permissions phone address Fire_dept_address verified');
-    res.status(200).json({ user });
+    const user = await User.findById(check_user.id).select('email name permissions phone address fire_dept_id verified');
+    const fire_dept_address = await User.findById(user.fire_dept_id).select('address');
+
+    res.status(200).json({ user, fire_dept_address });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -214,14 +216,14 @@ module.exports.Logout = async (req, res) => {
 module.exports.UpdateUser = async (req, res) => {
 
   const { _id } = req.params;
-  const { email, name, phone, address, Fire_dept_address, verified } = req.body;
+  const { email, name, phone, address, fire_dept_id, verified } = req.body;
 
   const user = await User.findById(_id);
   if (!user) {
     return res.status(404).json({ error: "User not found" });
   }
   try {
-    const updateFields = { email, name, phone, address, Fire_dept_address, verified };
+    const updateFields = { email, name, phone, address, fire_dept_id, verified };
 
     const updatedUser = await User.findOneAndUpdate({ _id }, updateFields, { new: true, runValidators: true });
 

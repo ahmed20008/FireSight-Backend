@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema({
       type: Number,
     },
   },
-  Fire_dept_id: {
+  fire_dept_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
