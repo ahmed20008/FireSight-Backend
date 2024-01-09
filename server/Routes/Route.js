@@ -2,6 +2,7 @@ const { Login, SignUp, AddUser, ForgotPassword, UpdatePassword, getAllUsers, del
 const { addPermissionToUser, removePermissionFromUser } = require("../Controllers/PermissionController");
 const { AddCamera, getAllCameras, getCameras, deleteCamera } = require("../Controllers/CameraController");
 const { AddEvent, getAllEvents, getEvents, eventVerify } = require("../Controllers/EventController");
+const { AddSupport, getAllSupport } = require("../Controllers/SupportController");
 const router = require("express").Router();
 
 router.post("/add-user", AddUser);
@@ -27,5 +28,8 @@ router.post("/add-event", AddEvent);
 router.get("/all-events", getAllEvents);
 router.get("/event/:_id", getEvents);
 router.put("/event-check/:_id", eventVerify);
+
+router.post("/support", AddSupport);
+router.get("/support", getAllSupport);
 
 module.exports = router;
