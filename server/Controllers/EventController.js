@@ -1,5 +1,6 @@
 const Event = require("../Models/EventModal");
 const User = require("../Models/UserModel");
+const Camera = require("../Models/CameraModel");
 
 module.exports.AddEvent = async (req, res) => {
   const { event_pic, event_clip, event_data, user_id, camera_id, fire_dept_id, createdAt } = req.body;
@@ -42,8 +43,26 @@ module.exports.getEvents = async (req, res) => {
     if (!events) {
       return res.status(404).json({ error: "no event found" });
     }
+    const eventsDetails = await Promise.all(events.map(async (event) => {
+      const camera = await Camera.findById(event.camera_id);
 
-    res.status(200).json({ events });
+      return {
+        _id: event._id,
+        event_data: event.event_data,
+        event_check: event.event_check,
+        event_pic: event.event_pic,
+        event_clip: event.event_clip,
+        user_id: event.user_id,
+        camera: {
+          name: camera.name,
+          location: camera.location,
+        },
+        createdAt: event.createdAt,
+        __v: event.__v,
+      };
+    }));
+
+    res.status(200).json({ eventsDetails });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
